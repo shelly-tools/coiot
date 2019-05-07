@@ -127,7 +127,7 @@ var (
 )
 
 // OptionID identifies an option in a message.
-type OptionID uint8
+type OptionID uint16
 
 /*
    +-----+----+---+---+---+----------------+--------+--------+---------+
