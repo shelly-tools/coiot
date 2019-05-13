@@ -155,22 +155,25 @@ type OptionID uint16
 
 // Option IDs.
 const (
-	IfMatch       OptionID = 1
-	URIHost       OptionID = 3
-	ETag          OptionID = 4
-	IfNoneMatch   OptionID = 5
-	Observe       OptionID = 6
-	URIPort       OptionID = 7
-	LocationPath  OptionID = 8
-	URIPath       OptionID = 11
-	ContentFormat OptionID = 12
-	MaxAge        OptionID = 14
-	URIQuery      OptionID = 15
-	Accept        OptionID = 17
-	LocationQuery OptionID = 20
-	ProxyURI      OptionID = 35
-	ProxyScheme   OptionID = 39
-	Size1         OptionID = 60
+	IfMatch        OptionID = 1
+	URIHost        OptionID = 3
+	ETag           OptionID = 4
+	IfNoneMatch    OptionID = 5
+	Observe        OptionID = 6
+	URIPort        OptionID = 7
+	LocationPath   OptionID = 8
+	URIPath        OptionID = 11
+	ContentFormat  OptionID = 12
+	MaxAge         OptionID = 14
+	URIQuery       OptionID = 15
+	Accept         OptionID = 17
+	LocationQuery  OptionID = 20
+	ProxyURI       OptionID = 35
+	ProxyScheme    OptionID = 39
+	Size1          OptionID = 60
+	GlobalDeviceId OptionID = 3332
+	StatusValidity OptionID = 3412
+	StatusSerial   OptionID = 3420
 )
 
 // Option value format (RFC7252 section 3.2)
@@ -190,23 +193,26 @@ type optionDef struct {
 	maxLen      int
 }
 
-var optionDefs = [256]optionDef{
-	IfMatch:       optionDef{valueFormat: valueOpaque, minLen: 0, maxLen: 8},
-	URIHost:       optionDef{valueFormat: valueString, minLen: 1, maxLen: 255},
-	ETag:          optionDef{valueFormat: valueOpaque, minLen: 1, maxLen: 8},
-	IfNoneMatch:   optionDef{valueFormat: valueEmpty, minLen: 0, maxLen: 0},
-	Observe:       optionDef{valueFormat: valueUint, minLen: 0, maxLen: 3},
-	URIPort:       optionDef{valueFormat: valueUint, minLen: 0, maxLen: 2},
-	LocationPath:  optionDef{valueFormat: valueString, minLen: 0, maxLen: 255},
-	URIPath:       optionDef{valueFormat: valueString, minLen: 0, maxLen: 255},
-	ContentFormat: optionDef{valueFormat: valueUint, minLen: 0, maxLen: 2},
-	MaxAge:        optionDef{valueFormat: valueUint, minLen: 0, maxLen: 4},
-	URIQuery:      optionDef{valueFormat: valueString, minLen: 0, maxLen: 255},
-	Accept:        optionDef{valueFormat: valueUint, minLen: 0, maxLen: 2},
-	LocationQuery: optionDef{valueFormat: valueString, minLen: 0, maxLen: 255},
-	ProxyURI:      optionDef{valueFormat: valueString, minLen: 1, maxLen: 1034},
-	ProxyScheme:   optionDef{valueFormat: valueString, minLen: 1, maxLen: 255},
-	Size1:         optionDef{valueFormat: valueUint, minLen: 0, maxLen: 4},
+var optionDefs = [4096]optionDef{
+	IfMatch:        optionDef{valueFormat: valueOpaque, minLen: 0, maxLen: 8},
+	URIHost:        optionDef{valueFormat: valueString, minLen: 1, maxLen: 255},
+	ETag:           optionDef{valueFormat: valueOpaque, minLen: 1, maxLen: 8},
+	IfNoneMatch:    optionDef{valueFormat: valueEmpty, minLen: 0, maxLen: 0},
+	Observe:        optionDef{valueFormat: valueUint, minLen: 0, maxLen: 3},
+	URIPort:        optionDef{valueFormat: valueUint, minLen: 0, maxLen: 2},
+	LocationPath:   optionDef{valueFormat: valueString, minLen: 0, maxLen: 255},
+	URIPath:        optionDef{valueFormat: valueString, minLen: 0, maxLen: 255},
+	ContentFormat:  optionDef{valueFormat: valueUint, minLen: 0, maxLen: 2},
+	MaxAge:         optionDef{valueFormat: valueUint, minLen: 0, maxLen: 4},
+	URIQuery:       optionDef{valueFormat: valueString, minLen: 0, maxLen: 255},
+	Accept:         optionDef{valueFormat: valueUint, minLen: 0, maxLen: 2},
+	LocationQuery:  optionDef{valueFormat: valueString, minLen: 0, maxLen: 255},
+	ProxyURI:       optionDef{valueFormat: valueString, minLen: 1, maxLen: 1034},
+	ProxyScheme:    optionDef{valueFormat: valueString, minLen: 1, maxLen: 255},
+	Size1:          optionDef{valueFormat: valueUint, minLen: 0, maxLen: 4},
+	GlobalDeviceId: optionDef{valueFormat: valueString, minLen: 1, maxLen: 255},
+	StatusValidity: optionDef{valueFormat: valueUint, minLen: 0, maxLen: 65535},
+	StatusSerial:   optionDef{valueFormat: valueUint, minLen: 0, maxLen: 65535},
 }
 
 // MediaType specifies the content type of a message.
@@ -379,6 +385,37 @@ func (m Message) optionStrings(o OptionID) []string {
 		rv = append(rv, o.(string))
 	}
 	return rv
+}
+
+func (m Message) optionDevice() []string {
+	return strings.Split(m.Option(GlobalDeviceId).(string), "#")
+}
+
+func (m Message) DeviceType() string {
+	return m.optionDevice()[0]
+}
+
+func (m Message) DeviceID() string {
+	return m.optionDevice()[1]
+}
+
+func (m Message) DeviceRevision() string {
+	return m.optionDevice()[2]
+}
+
+// StatusValidity gets maximal time (in seconds) between this and the next status publish.
+// If a report is not received from this device after the interval has passed
+// the device should be considered offline.
+func (m Message) StatusValidity() int {
+	value := m.Option(StatusValidity).(int)
+	if value&1 == 0 {
+		return value / 10
+	}
+	return value * 4
+}
+
+func (m Message) StatusSerial() int {
+	return m.Option(StatusSerial).(int)
 }
 
 // Path gets the Path set on this message if any.
