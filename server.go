@@ -74,7 +74,7 @@ func ListenAndServe(n, addr string, rh Handler) error {
 		return err
 	}
 
-	l, err := net.ListenUDP(n, uaddr)
+	l, err := net.ListenMulticastUDP(n, nil, uaddr)
 	if err != nil {
 		return err
 	}
