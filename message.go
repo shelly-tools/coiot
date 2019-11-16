@@ -52,6 +52,7 @@ const (
 	POST   COAPCode = 2
 	PUT    COAPCode = 3
 	DELETE COAPCode = 4
+	STATUS COAPCode = 30
 )
 
 // Response Codes
@@ -84,6 +85,7 @@ var codeNames = [256]string{
 	POST:                  "POST",
 	PUT:                   "PUT",
 	DELETE:                "DELETE",
+	STATUS:                "STATUS",
 	Created:               "Created",
 	Deleted:               "Deleted",
 	Valid:                 "Valid",
