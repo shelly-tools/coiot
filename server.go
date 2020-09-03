@@ -1,4 +1,4 @@
-// Package coap provides a CoAP client and server.
+// Package coiot provides a CoIoT client and server.
 package coap
 
 import (
@@ -12,12 +12,12 @@ const maxPktLen = 1500
 // Handler is a type that handles CoAP messages.
 type Handler interface {
 	// Handle the message and optionally return a response message.
-	ServeCOAP(l *net.UDPConn, a *net.UDPAddr, m *Message) *Message
+	ServeCoIoT(l *net.UDPConn, a *net.UDPAddr, m *Message) *Message
 }
 
 type funcHandler func(l *net.UDPConn, a *net.UDPAddr, m *Message) *Message
 
-func (f funcHandler) ServeCOAP(l *net.UDPConn, a *net.UDPAddr, m *Message) *Message {
+func (f funcHandler) ServeCoIoT(l *net.UDPConn, a *net.UDPAddr, m *Message) *Message {
 	return f(l, a, m)
 }
 
@@ -35,7 +35,7 @@ func handlePacket(l *net.UDPConn, data []byte, u *net.UDPAddr,
 		return
 	}
 
-	rv := rh.ServeCOAP(l, u, &msg)
+	rv := rh.ServeCoIoT(l, u, &msg)
 	if rv != nil {
 		Transmit(l, u, *rv)
 	}

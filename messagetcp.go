@@ -1,4 +1,4 @@
-package coap
+package coiot
 
 import (
 	"encoding/binary"
@@ -6,7 +6,7 @@ import (
 	"io"
 )
 
-// TcpMessage is a CoAP Message that can encode itself for TCP
+// TcpMessage is a CoIoT Message that can encode itself for TCP
 // transport.
 type TcpMessage struct {
 	Message
@@ -19,7 +19,7 @@ func (m *TcpMessage) MarshalBinary() ([]byte, error) {
 	}
 
 	/*
-		A CoAP TCP message looks like:
+		A CoIoT TCP message looks like:
 
 		     0                   1                   2                   3
 		    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1

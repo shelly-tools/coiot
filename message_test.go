@@ -1,4 +1,4 @@
-package coap
+package coiot
 
 import (
 	"bytes"
@@ -58,7 +58,7 @@ func assertEqualMessages(t *testing.T, e, a Message) {
 
 func TestMediaTypes(t *testing.T) {
 	types := []interface{}{TextPlain, AppLinkFormat, AppXML, AppOctets, AppExi, AppJSON}
-	exp := "coap.MediaType"
+	exp := "coiot.MediaType"
 	for _, typ := range types {
 		if got := fmt.Sprintf("%T", typ); got != exp {
 			t.Errorf("Error on %#v, expected %q, was %q", typ, exp, got)
@@ -131,7 +131,7 @@ func TestOptionToBytesPanic(t *testing.T) {
 }
 
 func TestTypeString(t *testing.T) {
-	tests := map[COAPType]string{
+	tests := map[CoIoTType]string{
 		Confirmable:    "Confirmable",
 		NonConfirmable: "NonConfirmable",
 		255:            "Unknown (0xff)",
@@ -146,7 +146,7 @@ func TestTypeString(t *testing.T) {
 }
 
 func TestCodeString(t *testing.T) {
-	tests := map[COAPCode]string{
+	tests := map[CoIoTCode]string{
 		0:             "Unknown (0x0)",
 		GET:           "GET",
 		POST:          "POST",
@@ -731,7 +731,7 @@ func TestDecodeContentFormatOptionToMediaType(t *testing.T) {
 		t.Fatalf("Error parsing request: %v", err)
 	}
 
-	expected := "coap.MediaType"
+	expected := "coiot.MediaType"
 	actualContentFormatType := fmt.Sprintf("%T", parsedMsg.Option(ContentFormat))
 	if expected != actualContentFormatType {
 		t.Fatalf("Expected %#v got %#v", expected, actualContentFormatType)
@@ -753,7 +753,7 @@ func TestDecodeContentFormatOptionToMediaTypeLarge(t *testing.T) {
 		t.Fatalf("Error parsing request: %v", err)
 	}
 
-	expected := "coap.MediaType"
+	expected := "coiot.MediaType"
 	expectedValue := MediaType(11050)
 	actualContentFormatTypeValue := parsedMsg.Option(ContentFormat).(MediaType)
 	actualContentFormatType := fmt.Sprintf("%T", actualContentFormatTypeValue)

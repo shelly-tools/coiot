@@ -1,4 +1,4 @@
-package coap
+package coiot
 
 import (
 	"net"
@@ -16,13 +16,13 @@ const (
 	MaxRetransmit = 4
 )
 
-// Conn is a CoAP client connection.
+// Conn is a CoIoT client connection.
 type Conn struct {
 	conn *net.UDPConn
 	buf  []byte
 }
 
-// Dial connects a CoAP client.
+// Dial connects a CoIoT client.
 func Dial(n, addr string) (*Conn, error) {
 	uaddr, err := net.ResolveUDPAddr(n, addr)
 	if err != nil {

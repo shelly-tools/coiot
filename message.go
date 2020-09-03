@@ -1,4 +1,4 @@
-package coap
+package coiot
 
 import (
 	"bytes"
@@ -10,18 +10,18 @@ import (
 	"strings"
 )
 
-// COAPType represents the message type.
-type COAPType uint8
+// CoIoTType represents the message type.
+type CoIoTType uint8
 
 const (
 	// Confirmable messages require acknowledgements.
-	Confirmable COAPType = 0
+	Confirmable CoIoTType = 0
 	// NonConfirmable messages do not require acknowledgements.
-	NonConfirmable COAPType = 1
+	NonConfirmable CoIoTType = 1
 	// Acknowledgement is a message indicating a response to confirmable message.
-	Acknowledgement COAPType = 2
+	Acknowledgement CoIoTType = 2
 	// Reset indicates a permanent negative acknowledgement.
-	Reset COAPType = 3
+	Reset CoIoTType = 3
 )
 
 var typeNames = [256]string{
@@ -39,45 +39,45 @@ func init() {
 	}
 }
 
-func (t COAPType) String() string {
+func (t CoIoTType) String() string {
 	return typeNames[t]
 }
 
-// COAPCode is the type used for both request and response codes.
-type COAPCode uint8
+// CoIoTCode is the type used for both request and response codes.
+type CoIoTCode uint8
 
 // Request Codes
 const (
-	GET    COAPCode = 1
-	POST   COAPCode = 2
-	PUT    COAPCode = 3
-	DELETE COAPCode = 4
-	STATUS COAPCode = 30
+	GET    CoIoTCode = 1
+	POST   CoIoTCode = 2
+	PUT    CoIoTCode = 3
+	DELETE CoIoTCode = 4
+	STATUS CoIoTCode = 30
 )
 
 // Response Codes
 const (
-	Created               COAPCode = 65
-	Deleted               COAPCode = 66
-	Valid                 COAPCode = 67
-	Changed               COAPCode = 68
-	Content               COAPCode = 69
-	BadRequest            COAPCode = 128
-	Unauthorized          COAPCode = 129
-	BadOption             COAPCode = 130
-	Forbidden             COAPCode = 131
-	NotFound              COAPCode = 132
-	MethodNotAllowed      COAPCode = 133
-	NotAcceptable         COAPCode = 134
-	PreconditionFailed    COAPCode = 140
-	RequestEntityTooLarge COAPCode = 141
-	UnsupportedMediaType  COAPCode = 143
-	InternalServerError   COAPCode = 160
-	NotImplemented        COAPCode = 161
-	BadGateway            COAPCode = 162
-	ServiceUnavailable    COAPCode = 163
-	GatewayTimeout        COAPCode = 164
-	ProxyingNotSupported  COAPCode = 165
+	Created               CoIoTCode = 65
+	Deleted               CoIoTCode = 66
+	Valid                 CoIoTCode = 67
+	Changed               CoIoTCode = 68
+	Content               CoIoTCode = 69
+	BadRequest            CoIoTCode = 128
+	Unauthorized          CoIoTCode = 129
+	BadOption             CoIoTCode = 130
+	Forbidden             CoIoTCode = 131
+	NotFound              CoIoTCode = 132
+	MethodNotAllowed      CoIoTCode = 133
+	NotAcceptable         CoIoTCode = 134
+	PreconditionFailed    CoIoTCode = 140
+	RequestEntityTooLarge CoIoTCode = 141
+	UnsupportedMediaType  CoIoTCode = 143
+	InternalServerError   CoIoTCode = 160
+	NotImplemented        CoIoTCode = 161
+	BadGateway            CoIoTCode = 162
+	ServiceUnavailable    CoIoTCode = 163
+	GatewayTimeout        CoIoTCode = 164
+	ProxyingNotSupported  CoIoTCode = 165
 )
 
 var codeNames = [256]string{
@@ -117,7 +117,7 @@ func init() {
 	}
 }
 
-func (c COAPCode) String() string {
+func (c CoIoTCode) String() string {
 	return codeNames[c]
 }
 
@@ -342,10 +342,10 @@ func (o options) Minus(oid OptionID) options {
 	return rv
 }
 
-// Message is a CoAP message.
+// Message is a CoIoT message.
 type Message struct {
-	Type      COAPType
-	Code      COAPCode
+	Type      CoIoTType
+	Code      CoIoTCode
 	MessageID uint16
 
 	Token, Payload []byte
@@ -601,13 +601,13 @@ func (m *Message) UnmarshalBinary(data []byte) error {
 		return errors.New("invalid version")
 	}
 
-	m.Type = COAPType((data[0] >> 4) & 0x3)
+	m.Type = CoIoTType((data[0] >> 4) & 0x3)
 	tokenLen := int(data[0] & 0xf)
 	if tokenLen > 8 {
 		return ErrInvalidTokenLen
 	}
 
-	m.Code = COAPCode(data[1])
+	m.Code = CoIoTCode(data[1])
 	m.MessageID = binary.BigEndian.Uint16(data[2:4])
 
 	if tokenLen > 0 {

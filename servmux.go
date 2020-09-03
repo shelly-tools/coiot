@@ -1,4 +1,4 @@
-package coap
+package coiot
 
 import (
 	"net"
@@ -60,15 +60,15 @@ func notFoundHandler(l *net.UDPConn, a *net.UDPAddr, m *Message) *Message {
 
 var _ = Handler(&ServeMux{})
 
-// ServeCOAP handles a single COAP message.  The message arrives from
+// ServeCoIoT handles a single CoIoT message.  The message arrives from
 // the given listener having originated from the given UDPAddr.
-func (mux *ServeMux) ServeCOAP(l *net.UDPConn, a *net.UDPAddr, m *Message) *Message {
+func (mux *ServeMux) ServeCoIoT(l *net.UDPConn, a *net.UDPAddr, m *Message) *Message {
 	h, _ := mux.match(m.PathString())
 	if h == nil {
 		h, _ = funcHandler(notFoundHandler), ""
 	}
 	// TODO:  Rewrite path?
-	return h.ServeCOAP(l, a, m)
+	return h.ServeCoIoT(l, a, m)
 }
 
 // Handle configures a handler for the given path.

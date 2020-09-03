@@ -1,4 +1,4 @@
-package coap
+package coiot
 
 import (
 	"net"
@@ -21,16 +21,16 @@ func TestPathMatching(t *testing.T) {
 
 	msg := &Message{}
 	msg.SetPathString("/a")
-	m.ServeCOAP(nil, nil, msg)
+	m.ServeCoIoT(nil, nil, msg)
 	msg.SetPathString("/a")
-	m.ServeCOAP(nil, nil, msg)
+	m.ServeCoIoT(nil, nil, msg)
 	msg.SetPathString("/b")
-	m.ServeCOAP(nil, nil, msg)
+	m.ServeCoIoT(nil, nil, msg)
 	msg.SetPathString("/c")
-	m.ServeCOAP(nil, nil, msg)
+	m.ServeCoIoT(nil, nil, msg)
 	msg.Type = NonConfirmable
 	msg.SetPathString("/c")
-	m.ServeCOAP(nil, nil, msg)
+	m.ServeCoIoT(nil, nil, msg)
 
 	if msgs["a"] != 2 {
 		t.Errorf("Expected 2 messages for /a, got %v", msgs["a"])
