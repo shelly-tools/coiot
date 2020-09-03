@@ -1,4 +1,4 @@
-package coap
+package coiot
 
 import (
 	"net"
@@ -14,8 +14,8 @@ func startUDPLisenter(t *testing.T) (*net.UDPConn, string) {
 	if err != nil {
 		t.Fatal("Can't listen on UDP")
 	}
-	coapServerAddr := udpListener.LocalAddr().String()
-	return udpListener, coapServerAddr
+	coiotServerAddr := udpListener.LocalAddr().String()
+	return udpListener, coiotServerAddr
 }
 
 func dialAndSend(t *testing.T, addr string, req Message) *Message {
@@ -44,7 +44,7 @@ func TestServeWithAckResponse(t *testing.T) {
 		Type:      Acknowledgement,
 		Code:      Content,
 		MessageID: req.MessageID,
-		Payload:   []byte("Reply from CoAP server"),
+		Payload:   []byte("Reply from CoIoT server"),
 	}
 	res.SetOption(ContentFormat, TextPlain)
 	res.SetPath(req.Path())
@@ -54,13 +54,13 @@ func TestServeWithAckResponse(t *testing.T) {
 		return &res
 	})
 
-	udpListener, coapServerAddr := startUDPLisenter(t)
+	udpListener, coiotServerAddr := startUDPLisenter(t)
 	defer udpListener.Close()
 	go Serve(udpListener, handler)
 
-	m := dialAndSend(t, coapServerAddr, req)
+	m := dialAndSend(t, coiotServerAddr, req)
 	if m == nil {
-		t.Fatalf("Didn't receive CoAP response")
+		t.Fatalf("Didn't receive CoIoT response")
 	}
 	assertEqualMessages(t, res, *m)
 }
@@ -79,11 +79,11 @@ func TestServeWithoutAckResponse(t *testing.T) {
 		return nil
 	})
 
-	udpListener, coapServerAddr := startUDPLisenter(t)
+	udpListener, coiotServerAddr := startUDPLisenter(t)
 	defer udpListener.Close()
 	go Serve(udpListener, handler)
 
-	m := dialAndSend(t, coapServerAddr, req)
+	m := dialAndSend(t, coiotServerAddr, req)
 	if m != nil {
 		t.Fatalf("Received response packet, but expected none")
 	}
