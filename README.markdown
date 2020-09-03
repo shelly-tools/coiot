@@ -1,13 +1,14 @@
-### CoIoT Library written in Golang (based on CoAP package) for the Shelly IoT-Devices
+### CoIoT Library written in Golang
 
-Package shelly-tools/coiot provides coiot (CoAP) communication with the popular Shelly IoT-Devices from Allterco Robotics.
+Package `shelly-tools/coiot` provides CoIoT (CoAP) communication with the popular Shelly IoT-Devices from Allterco Robotics.
+The [CoIoT protocol](https://shelly-api-docs.shelly.cloud/#coiot-protocol)  is yet another protocol for IoT communication and integration. CoIoT is based on CoAP with some additions as new request code `0.30` for status publishing. All payloads are JSON encoded.
 
-#### Installation
+### Installation
 Install via `$ go get github.com/shelly-tools/coiot`.
 
 Please add -u flag to update in the future.
 
-#### Examples
+### Examples
 
 A basic client example to query `/cit/d` path from the Shelly:
 ```golang
@@ -45,11 +46,13 @@ func main() {
 
 please check the example directory for more..
 
-#### Credits
+
+
+### Credits
 
 This library is based on the following packages:
 
-* https://github.com/dustin/go-coap
-* https://github.com/bulyshko/coiot
+ * https://github.com/dustin/go-coap
+ * https://github.com/bulyshko/coiot
 
 Special "Thanks" to Dustin Sallings & Romuald Bulyshko who did most of the work.
