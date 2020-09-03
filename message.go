@@ -52,6 +52,7 @@ const (
 	POST   CoIoTCode = 2
 	PUT    CoIoTCode = 3
 	DELETE CoIoTCode = 4
+	EXEC   CoIoTCode = 29
 	STATUS CoIoTCode = 30
 )
 
@@ -85,6 +86,7 @@ var codeNames = [256]string{
 	POST:                  "POST",
 	PUT:                   "PUT",
 	DELETE:                "DELETE",
+	EXEC:                  "EXEC",
 	STATUS:                "STATUS",
 	Created:               "Created",
 	Deleted:               "Deleted",
