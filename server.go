@@ -1,5 +1,5 @@
 // Package coiot provides a CoIoT client and server.
-package coap
+package coiot
 
 import (
 	"log"
@@ -9,7 +9,7 @@ import (
 
 const maxPktLen = 1500
 
-// Handler is a type that handles CoAP messages.
+// Handler is a type that handles CoIoT messages.
 type Handler interface {
 	// Handle the message and optionally return a response message.
 	ServeCoIoT(l *net.UDPConn, a *net.UDPAddr, m *Message) *Message
