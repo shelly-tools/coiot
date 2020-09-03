@@ -22,6 +22,6 @@ func CoIoTHandler(l *net.UDPConn, a *net.UDPAddr, m *coiot.Message) *coiot.Messa
 
 func main() {
 	mux := coiot.NewServeMux()
-	mux.Handle("/cit/s", coap.FuncHandler(CoIoTHandler))
-	log.Fatal(coap.ListenAndServe("udp", "224.0.1.187:5683", mux))
+	mux.Handle("/cit/s", coiot.FuncHandler(CoIoTHandler))
+	log.Fatal(coiot.ListenAndServe("udp", "224.0.1.187:5683", mux))
 }

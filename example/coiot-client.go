@@ -18,14 +18,14 @@ func main() {
 		payload = os.Args[3]
 	}
 	req := coiot.Message{
-		Type:      coap.Confirmable,
-		Code:      coap.GET,
+		Type:      coiot.Confirmable,
+		Code:      coiot.GET,
 		MessageID: 12345,
 		Payload:   []byte(payload),
 	}
 	req.SetPathString(path)
 
-	c, err := coap.Dial("udp", ip + ":5683")
+	c, err := coiot.Dial("udp", ip + ":5683")
 	if err != nil {
 		log.Fatalf("Error dialing: %v", err)
 	}
