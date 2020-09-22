@@ -2,30 +2,26 @@ package main
 
 import (
 	"log"
-	"os"
-
+        "flag"
 	"github.com/shelly-tools/coiot"
 )
 
 func main() {
 
-	ip := "192.168.178.212"
-	path := "/cit/d"
-	payload := ""
-	if len(os.Args) > 1 {
-		ip = os.Args[1]
-		path = os.Args[2]
-		payload = os.Args[3]
-	}
+	ip := flag.String("ip", "192.168.178.240", "the Shellys ip address")
+	path := flag.String("path", "/cit/s", "the CoIoT path - /cit/d or /cit/s")
+	payload := flag.String("payload","", "Payload to send")
+
+	flag.Parse()
 	req := coiot.Message{
 		Type:      coiot.Confirmable,
 		Code:      coiot.GET,
 		MessageID: 12345,
-		Payload:   []byte(payload),
+		Payload:   []byte(*payload),
 	}
-	req.SetPathString(path)
+	req.SetPathString(*path)
 
-	c, err := coiot.Dial("udp", ip + ":5683")
+	c, err := coiot.Dial("udp", *ip+":5683")
 	if err != nil {
 		log.Fatalf("Error dialing: %v", err)
 	}
