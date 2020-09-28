@@ -8,6 +8,10 @@ import (
 	"github.com/shelly-tools/coiot"
 )
 
+var (
+	Id uint16 = 12345
+)
+
 func main() {
 
 	//Send CoIoT Exec to Shelly RGBW2 with "Listen CoAp for color change commands" enabled.
@@ -24,11 +28,11 @@ func main() {
 			up = true
 			payload = "{\"a\":100,\"i\":[101,102,103,104,105,106,107,108],\"v\":[0,255,0,0,100,100,2000,1]}"
 		}
-
+		Id = Id + 1
 		req := coiot.Message{
-			Type:      coiot.Confirmable,
+			Type:      coiot.NonConfirmable,
 			Code:      coiot.EXEC,
-			MessageID: 12345,
+			MessageID: Id,
 			Payload:   []byte(payload),
 		}
 		req.SetPathString("/cit/e")
