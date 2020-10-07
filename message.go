@@ -391,20 +391,32 @@ func (m Message) optionStrings(o OptionID) []string {
 	return rv
 }
 
-func (m Message) optionDevice() []string {
+func (m Message) OptionDevice() []string {
+	if m.Option(GlobalDeviceId) == nil {
+		return nil
+	}
 	return strings.Split(m.Option(GlobalDeviceId).(string), "#")
 }
 
 func (m Message) DeviceType() string {
-	return m.optionDevice()[0]
+	if m.Option(GlobalDeviceId) == nil {
+		return ""
+	}
+	return m.OptionDevice()[0]
 }
 
 func (m Message) DeviceID() string {
-	return m.optionDevice()[1]
+	if m.Option(GlobalDeviceId) == nil {
+		return ""
+	}
+	return m.OptionDevice()[1]
 }
 
 func (m Message) DeviceRevision() string {
-	return m.optionDevice()[2]
+	if m.Option(GlobalDeviceId) == nil {
+		return ""
+	}
+	return m.OptionDevice()[2]
 }
 
 // StatusValidity gets maximal time (in seconds) between this and the next status publish.
