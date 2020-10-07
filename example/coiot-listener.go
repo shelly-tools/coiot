@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net"
-	"os"
 
 	"github.com/shelly-tools/coiot"
 )
@@ -14,15 +13,7 @@ func CoIoTHandler(l *net.UDPConn, a *net.UDPAddr, m *coiot.Message) *coiot.Messa
 	if m.OptionDevice() == nil {
 		return nil
 	}
-
-	if len(os.Args) > 1 {
-		ip := os.Args[1]
-		if a.String() == ip+":5683" {
-			log.Printf("%s - DeviceType: %s - DeviceID: %s - Path: %s - Payload: %s", a, m.DeviceType(), m.DeviceID(), m.Path(), s)
-		}
-	} else {
-		log.Printf("%s - DeviceType: %s - DeviceID: %s - Path: %s - Payload: %s", a, m.DeviceType(), m.DeviceID(), m.Path(), s)
-	}
+	log.Printf("%s - DeviceType: %s - DeviceID: %s - Path: %s - Payload: %s", a, m.DeviceType(), m.DeviceID(), m.Path(), s)
 	return nil
 }
 
