@@ -8,7 +8,7 @@ import (
 const (
 	// ResponseTimeout is the amount of time to wait for a
 	// response.
-	ResponseTimeout = time.Second * 2
+	ResponseTimeout = time.Second * 10
 	// ResponseRandomFactor is a multiplier for response backoff.
 	ResponseRandomFactor = 1.5
 	// MaxRetransmit is the maximum number of times a message will
