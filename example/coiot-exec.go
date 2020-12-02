@@ -15,18 +15,25 @@ var (
 func main() {
 
 	//Send CoIoT Exec to Shelly RGBW2 with "Listen CoAp for color change commands" enabled.
-	payload := ""
-	ip := flag.String("ip", "224.0.1.187", "the Shellys ip address")
+	//payload := ""
 	up := true
+	IpAddress := flag.String("ip", "224.0.1.187", "the Shellys ip address")
+	Interval := flag.Int("interval", 2000, "Interval to change the color")
+	Transition := flag.String("transition", "1000", "Interval to change the color")
+	Pcol := flag.String("pcol", "0,0,255,0", "primary color rbgw, default is 0,0,255,0")
+	Scol := flag.String("scol", "255,0,0,0", "secondary color in rgbw, default is 255,0,0,0")
 
+	flag.Parse()
 	// Simple infinite color change between blue and green every 5 seconds
 	for {
+		var payload string
+
 		if up == true {
 			up = false
-			payload = "{\"a\":100,\"i\":[101,102,103,104,105,106,107,108],\"v\":[0,0,255,0,100,100,2000,1]}"
+			payload = `{"a":100,"i":[101,102,103,104,105,106,107,108],"v":[` + *Pcol + `,100,100,` + *Transition + `,1]}`
 		} else {
 			up = true
-			payload = "{\"a\":100,\"i\":[101,102,103,104,105,106,107,108],\"v\":[0,255,0,0,100,100,2000,1]}"
+			payload = `{"a":100,"i":[101,102,103,104,105,106,107,108],"v":[` + *Scol + `,100,100,` + *Transition + `,1]}`
 		}
 		Id = Id + 1
 		req := coiot.Message{
@@ -37,17 +44,15 @@ func main() {
 		}
 		req.SetPathString("/cit/e")
 
-		c, err := coiot.Dial("udp", *ip+":5683")
+		c, err := coiot.Dial("udp", *IpAddress+":5683")
 		if err != nil {
 			log.Fatalf("Error dialing: %v", err)
 		}
-
 		rv, _ := c.Send(req)
 
 		if rv != nil {
 			log.Println(payload)
 		}
-		time.Sleep(2000 * time.Millisecond)
+		time.Sleep(time.Duration(*Interval) * time.Millisecond)
 	}
-
 }
