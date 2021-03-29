@@ -67,14 +67,29 @@ func Receive(l *net.UDPConn, buf []byte) (Message, error) {
 	return ParseMessage(buf[:nr])
 }
 
-// ListenAndServe binds to the given address and serve requests forever.
-func ListenAndServe(n, addr string, rh Handler) error {
+// ListenAndServeMulticast binds to the given address and serve requests forever.
+func ListenAndServeMulticast(n, addr string, rh Handler) error {
 	uaddr, err := net.ResolveUDPAddr(n, addr)
 	if err != nil {
 		return err
 	}
 
 	l, err := net.ListenMulticastUDP(n, nil, uaddr)
+	if err != nil {
+		return err
+	}
+
+	return Serve(l, rh)
+}
+
+// ListenAndServeUnicast binds to the given address and serve requests forever.
+func ListenAndServeUnicast(n, addr string, rh Handler) error {
+	uaddr, err := net.ResolveUDPAddr(n, addr)
+	if err != nil {
+		return err
+	}
+
+	l, err := net.ListenUDP(n, uaddr)
 	if err != nil {
 		return err
 	}
